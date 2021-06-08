@@ -2,16 +2,18 @@ const bird = document.querySelector(".bird");
 const container = document.querySelector(".main-container");
 const obstacle = document.querySelector(".obstacle");
 const hole = document.querySelector(".hole");
+
+const instruction = document.querySelector(".instruction");
 const root = document.documentElement;
 const scorecard = document.querySelector(".scorecard");
 const gameLoopTime = 100;
 const holeMinTop = bird.clientHeight;
-const holeMinBottom =
+const holeMaxTop =
   container.clientHeight - hole.clientHeight - bird.clientHeight;
 
 let gameId;
 let counter = 0;
-const gameState = {
+let gameState = {
   started: false,
   height: 0,
   gravity: 10,
@@ -26,8 +28,11 @@ const gcs = (element) => getComputedStyle(element);
 function jump(e) {
   if ((e.type == "keyup" && e.keyCode == 32) || e.type == "touchstart") {
     if (!gameState.started) {
+      instruction.classList.add("d-none");
+
       gameState.height += 300;
       gameState.started = true;
+      obstacle.classList.add("animate");
       gameId = setInterval(gameLoop, gameLoopTime);
     }
     gameState.height -= 60;
@@ -39,7 +44,7 @@ function jump(e) {
 function randomizeHole() {
   counter += 1;
   const randomTop = Math.floor(
-    Math.random() * (holeMinBottom - holeMinTop + 1) + holeMinTop
+    Math.random() * (holeMaxTop - holeMinTop + 1) + holeMinTop
   );
 
   root.style.setProperty("--hole-top", randomTop + "px");
@@ -75,6 +80,10 @@ function checkHeight() {
 }
 
 function endGame() {
+  obstacle.classList.remove("animate");
+  instruction.classList.remove("d-none");
+
+  gameState.started = false;
   clearInterval(gameId);
   container.classList.add("game-over");
   window.removeEventListener("keyup", jump);
@@ -82,6 +91,7 @@ function endGame() {
   container.removeEventListener("animationiteration", randomizeHole);
   scorecard.textContent = counter;
   scorecard.style.textDecoration = "none";
+  gameState = { started: false, height: 0, gravity: 10, isChanged: false };
 }
 
 function gameLoop() {
@@ -90,6 +100,15 @@ function gameLoop() {
   checkHeight();
   bird.style.top = gameState.height + "px";
 }
+
+// function restart() {
+//   bird.style.top = container.clientHeight / 2 + "px";
+//   bird.style.left = container.clientWidth / 2 + "px";
+//   container.addEventListener("animationiteration", randomizeHole);
+//   window.addEventListener("touchstart", jump);
+//   window.addEventListener("keyup", jump);
+//   container.classList.remove("game-over");
+// }
 
 container.addEventListener("animationiteration", randomizeHole);
 window.addEventListener("touchstart", jump);

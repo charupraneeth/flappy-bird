@@ -28,9 +28,13 @@ h1 {
   max-width: 600px;
   margin: 0 auto;
   margin-top: 1rem;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: relative;
   overflow: hidden;
+  user-select: none;
 }
 .bird {
   transition: all 0.2s ease;
@@ -63,14 +67,28 @@ h1 {
   height: 100%;
   width: 8%;
   background: greenyellow;
+  opacity: 0;
+}
+.obstacle.animate {
   animation: obstacle 2.5s forwards infinite linear;
+  opacity: 1;
 }
 .hole {
   position: relative;
   top: var(--hole-top);
   width: 100%;
-  height: 120px;
+  height: 150px;
   background: #70c5ce;
+}
+
+.instruction {
+  z-index: 100;
+}
+.opacity-1 {
+  opacity: 1;
+}
+.d-none {
+  display: none;
 }
 @keyframes obstacle {
   from {
