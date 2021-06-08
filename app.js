@@ -3,13 +3,14 @@ const container = document.querySelector(".main-container");
 const obstacle = document.querySelector(".obstacle");
 const hole = document.querySelector(".hole");
 const root = document.documentElement;
-
+const scorecard = document.querySelector(".scorecard");
 const gameLoopTime = 100;
 const holeMinTop = bird.clientHeight;
 const holeMinBottom =
   container.clientHeight - hole.clientHeight - bird.clientHeight;
 
 let gameId;
+let counter = 0;
 const gameState = {
   started: false,
   height: 0,
@@ -36,6 +37,7 @@ function jump(e) {
 }
 
 function randomizeHole() {
+  counter += 1;
   const randomTop = Math.floor(
     Math.random() * (holeMinBottom - holeMinTop + 1) + holeMinTop
   );
@@ -78,6 +80,8 @@ function endGame() {
   window.removeEventListener("keyup", jump);
   window.removeEventListener("touchstart", jump);
   container.removeEventListener("animationiteration", randomizeHole);
+  scorecard.textContent = counter;
+  scorecard.style.textDecoration = "none";
 }
 
 function gameLoop() {
